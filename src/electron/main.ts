@@ -8,12 +8,18 @@ import { createMenu } from "./menu.js";
 // if you want to disable menu completely 
 // Menu.setApplicationMenu(null)
 
+// If you want to send some payload from frontend and then perform a action in the backend with out returning the value to frontend
+// Watch the tutorial on freecodecamp to make the ipcOn in preload and ipcOnHandler in utils
+
 
 app.on("ready", () => {
   const mainWindow = new BrowserWindow({
     webPreferences: {
       preload: getPreloadPath(),
     },
+    // to remove frame
+    // frame:false
+    // but the menu will also disappear and you will have to design from the frontend and then assign function to it to cloe or minimize or other things
   });
   if (isDev()) {
     mainWindow.loadURL("http://localhost:5123/");
