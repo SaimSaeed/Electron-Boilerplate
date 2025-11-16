@@ -1,6 +1,4 @@
-import { useMemo, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { useStatistics } from "./useStatistics";
 import Chart from "./components/Chart";
@@ -8,17 +6,37 @@ import Chart from "./components/Chart";
 function App() {
   const [count, setCount] = useState(0);
   const statistics = useStatistics(10);
+  const [activeView, setActiveView] = useState<View>("CPU");
   const cpuUsages = useMemo(
     () => statistics.map((stat) => stat.cpuUsage),
     [statistics]
   );
+  const ramUsages = useMemo(
+    () => statistics.map((stat) => stat.ramUsage),
+    [statistics]
+  );
+  const storageUsages = useMemo(
+    () => statistics.map((stat) => stat.storageUsage),
+    [statistics]
+  );
 
-  console.log(statistics);
+  const activeUsages = useMemo(() => {
+    switch (activeView) {
+      case "CPU":
+        return cpuUsages;
+      case "RAM":
+        return ramUsages;
+      case "STORAGE":
+        return storageUsages;
+    }
+  }, [activeView,cpuUsages,ramUsages,storageUsages]);
 
+  useEffect(() => {
+    return window.electron.subscribeChangeView((view) => setActiveView(view));
+  }, []);
   return (
     <>
-     
-      <Chart data={cpuUsages} maxDataPoints={10}/>
+      <Chart data={activeUsages} maxDataPoints={10} />
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>

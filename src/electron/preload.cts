@@ -1,10 +1,15 @@
-import electron from "electron";
 // import { getStaticData } from "./resourceManager"
+const electron = require("electron");
 
 electron.contextBridge.exposeInMainWorld("electron", {
   subscribeStatistics: (callback) => {
     return ipcOn("statistics", (stats) => {
       callback(stats);
+    });
+  },
+  subscribeChangeView: (callback) => {
+    return ipcOn("changeView", (view) => {
+      callback(view);
     });
   },
   getStaticData: () => ipcInvoke("getStaticData"),
