@@ -8,8 +8,6 @@ import { createMenu } from "./menu.js";
 // if you want to disable menu completely 
 // Menu.setApplicationMenu(null)
 
-// If you want to send some payload from frontend and then perform a action in the backend with out returning the value to frontend
-// Watch the tutorial on freecodecamp to make the ipcOn in preload and ipcOnHandler in utils
 
 
 app.on("ready", () => {
@@ -45,6 +43,9 @@ app.on("ready", () => {
 // The preload script already has the IPC invoke and on function so we just need to attach our new function to the preload 
 // and just get the function from the window object this is more secure
 // we could just use ipc invoke or on on frontend to get the functions and values but using preload with windows is more secure
+
+// If you want to send some payload from frontend and then perform a action in the backend with out returning the value to frontend
+// Watch the tutorial on freecodecamp to make the ipcOn in preload and ipcOnHandler in utils
 
 function handleCloseEvents(mainWindow: BrowserWindow) {
   let willClose = false;
