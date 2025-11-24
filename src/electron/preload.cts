@@ -13,12 +13,15 @@ electron.contextBridge.exposeInMainWorld("electron", {
     });
   },
   getStaticData: () => ipcInvoke("getStaticData"),
+  addItem: (data: any) => ipcInvoke("addItem", data),
+   getItems: () => ipcInvoke("getItems"),
 } satisfies Window["electron"]);
 
 function ipcInvoke<Key extends keyof EventPayloadMapping>(
-  key: Key
+  key: Key,
+  data?: any
 ): Promise<EventPayloadMapping[Key]> {
-  return electron.ipcRenderer.invoke(key);
+  return electron.ipcRenderer.invoke(key, data);
 }
 
 function ipcOn<Key extends keyof EventPayloadMapping>(

@@ -1,16 +1,32 @@
-import { app, BrowserWindow,} from "electron";
+import { app, BrowserWindow, ipcMain,} from "electron";
 import { ipcMainHandle, isDev } from "./utils.js";
 import { getStaticData, pollResources } from "./resourceManager.js";
 import { getPreloadPath, getUIPath } from "./pathResolver.js";
 import { createTray } from "./tray.js";
 import { createMenu } from "./menu.js";
+import { db } from "./db/index.js";
+import { items } from "./db/schema.js";
 
 // if you want to disable menu completely 
 // Menu.setApplicationMenu(null)
+ipcMain.handle("addItem", async (_, data) => {
+  return await db.insert(items).values({
+    name: data.name,
+    type: data.type,
+    company: data.company,
+    total: data.total,
+    remaining: data.total,
+    sold: 0,
+  });
+});
 
+ipcMain.handle("getItems", async () => {
+  return await db.select().from(items);
+});
 
 
 app.on("ready", () => {
+  // runMigrations();
   const mainWindow = new BrowserWindow({
     webPreferences: {
       preload: getPreloadPath(),

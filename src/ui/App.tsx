@@ -3,6 +3,18 @@ import "./App.css";
 import { useStatistics } from "./useStatistics";
 import Chart from "./components/Chart";
 
+type Item = {
+  id: number;
+  name: string;
+  type: string;
+  company: string;
+  total: number;
+  remaining: number;
+  sold: number;
+};
+
+
+
 function App() {
   const [count, setCount] = useState(0);
   const statistics = useStatistics(10);
@@ -34,9 +46,36 @@ function App() {
   useEffect(() => {
     return window.electron.subscribeChangeView((view) => setActiveView(view));
   }, []);
+
+
+const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+  async function testDb() {
+    // await window.electron.addItem({
+    //   name: "Laptop",
+    //   type: "Electronics",
+    //   company: "Dell",
+    //   total: 10,
+    // });
+
+    const result = await window.electron.getItems();
+    setItems(result)
+    console.log("Items:", result);
+  }
+
+  testDb();
+}, []);
   return (
     <>
       <Chart data={activeUsages} maxDataPoints={10} />
+      {
+        items.map((item)=>{
+          return(
+            <h2 key={item.id}>{item.name}</h2>
+          )
+        })
+      }
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
